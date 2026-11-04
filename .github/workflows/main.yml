@@ -1,23 +1,26 @@
 name: Build AST Synth VST3
-on: workflow_dispatch:
-jobs: build: runs-on: windows-latest
-steps:
-  - name: Download source code
-    uses: actions/checkout@v4
 
-  - name: Install CMake and Ninja
-    run: choco install cmake ninja -y
+on:
+  workflow_dispatch:
 
-  - name: Build VST3
-    shell: cmd
-    run: |
-      mkdir build
-      cd build
-      cmake .. -G Ninja
-      cmake --build .
+jobs:
+  build:
+    runs-on: windows-latest
 
-  - name: Upload VST3
-    uses: actions/upload-artifact@v4
-    with:
-      name: AST-Synth-VST3
-      path: build
+    steps:
+      - name: Download source code
+        uses: actions/checkout@v4
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Build VST3
+        shell: cmd
+        run: |
+          build.bat
+
+      - name: Upload VST3
+        uses: actions/upload-artifact@v4
+        with:
+          name: AST-Synth-VST3
+          path: build
